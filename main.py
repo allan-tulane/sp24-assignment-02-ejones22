@@ -70,7 +70,7 @@ def subquadratic_multiply(x, y):
     # Shift the difference (z2 - z1 - z3) left by half the length (for the middle terms)
     bin_dif = BinaryNumber(z2.decimal_val - z1.decimal_val - z3.decimal_val)
     
-  
+   # Combine the results according to Karatsuba method:
   result = bit_shift(z1, len(xvec)).decimal_val + bit_shift(
       bin_dif, len(xvec) // 2).decimal_val + z3.decimal_val
 
