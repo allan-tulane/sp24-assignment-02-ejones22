@@ -46,9 +46,35 @@ def pad(x,y):
 
 
 def subquadratic_multiply(x, y):
-    ### TODO
-    pass
-    ###
+  # Convert the inputs to binary vectors.
+  xvec = x.binary_vec
+  yvec = y.binary_vec
+  
+  # Pad the shorter vector to match the length of the longer one.
+  xvec, yvec = pad(xvec, yvec)
+  # Base case: if both numbers are 1 or 0, multiply them directly.
+  if x.decimal_val <= 1 and y.decimal_val <= 1:
+    return BinaryNumber(x.decimal_val * y.decimal_val)
+  else:
+    # Split the binary vectors of x and y into left and right parts.
+    xvec_l, xvec_r = split_number(xvec) 
+    yvec_l, yvec_r = split_number(yvec) 
+    # multiply the left parts and the right parts of x and y.
+    z1 = subquadratic_multiply(xvec_l, yvec_l) 
+     # Multiply the sums of left and right halves of both x and y.
+    z2 = subquadratic_multiply(
+        BinaryNumber(xvec_l.decimal_val + xvec_r.decimal_val),
+        BinaryNumber(yvec_l.decimal_val + yvec_r.decimal_val))
+    z3 = subquadratic_multiply(xvec_r, yvec_r)
+   
+    # Shift the difference (z2 - z1 - z3) left by half the length (for the middle terms)
+    bin_dif = BinaryNumber(z2.decimal_val - z1.decimal_val - z3.decimal_val)
+    
+  
+  result = bit_shift(z1, len(xvec)).decimal_val + bit_shift(
+      bin_dif, len(xvec) // 2).decimal_val + z3.decimal_val
+
+  return BinaryNumber(result)
 
 
 
